@@ -3,9 +3,9 @@ package sql
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func Connect(name string) (*sql.DB, error) {
@@ -21,8 +21,6 @@ func Connect(name string) (*sql.DB, error) {
 		log.Println(err)
 		return &sql.DB{}, err
 	}
-
-	log.Println(db)
 
 	return db, nil
 }

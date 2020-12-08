@@ -22,7 +22,7 @@ func main() {
 
 	c.AddFunc("@every 0h0m1s", backup.Start)
 
-	go c.Start()
+	c.Start()
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt, os.Kill)
 	<-sig

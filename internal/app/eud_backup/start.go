@@ -3,6 +3,7 @@ package eud_backup
 import (
 	"eud_backup/internal/pkg/eud_backup/sql"
 	"log"
+	backup "eud_backup/internal/pkg/eud_backup"
 )
 
 func Start() {
@@ -19,7 +20,7 @@ func Start() {
 			return
 		}
 
-		db.Close()
+		backup.Backup(db, name)
 	}
 
 }

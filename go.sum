@@ -1,3 +1,5 @@
+github.com/JamesStewy/go-mysqldump v0.2.2 h1:tMtZDnIi2hz6H3Nna0TPhvWfBZlXe4i7vkjc5Vd8Gdo=
+github.com/JamesStewy/go-mysqldump v0.2.2/go.mod h1:JuJhv4dTbe2OQpABlwqj0B+6E9VLjGLG1t4NJRTcB3w=
 github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
 github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
