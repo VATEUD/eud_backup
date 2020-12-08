@@ -11,10 +11,10 @@ import (
 // Represents the dump directory
 var dumpDir string = "dumps"
 
-func Backup(db *sql.DB, dbname , folder string) {
+func Backup(db *sql.DB, dbname, folder string) {
 	var fileName = name(dbname)
 
-	dumper, err := mysqldump.Register(db, dumpDir + "/" + folder, fileName)
+	dumper, err := mysqldump.Register(db, dumpDir+"/"+folder, fileName)
 
 	if err != nil {
 		log.Println(err)
