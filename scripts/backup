@@ -1,0 +1,45 @@
+#! /bin/bash
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+VERBOSE=0
+
+dirdate=$(date +%Y-%m-%d)
+
+cd /var/lib/mysql-files
+
+if [ ${VERBOSE} -eq 1 ] ; then
+  echo 'flush tables'
+fi
+
+mysqladmin --defaults-file=/etc/mysql/debian.cnf flush-tables > /dev/null
+
+if [ ${VERBOSE} -eq 1 ]; then
+  echo "dumping of databases"
+fi
+for database in $(mysql --defaults-file=/etc/mysql/debian.cnf -ss -e 'show databases' | grep -v dumps | grep -vE '^(information_schema|performance_schema|sys)$' ); do
+  [[ ${VERBOSE} -eq 1 ]] && echo ${database}
+  mkdir -p $dirdate/$database
+  chown mysql:mysql $dirdate/$database
+  for table in $(mysql --defaults-file=/etc/mysql/debian.cnf -ss -e "show tables from $database"); do
+    [[ "${database}.${table}" == 'mysql.event' ]] && continue
+    [[ ${VERBOSE} -eq 1 ]] && echo "    ${table}"
+    mysqldump \
+      --defaults-file=/etc/mysql/debian.cnf \
+      --skip-tz-utc \
+      --default-character-set=utf8 \
+      --add-drop-table \
+      --skip-lock-tables \
+      -T /var/lib/mysql-files/$dirdate/$database/ \
+    $database $table
+  done
+done
+  
+cd /
+  
+echo
+  
+find /var/lib/mysql-files -ctime +7 -delete
+find /var/lib/mysql-files -type d -empty -delete
+  
+exit 0
