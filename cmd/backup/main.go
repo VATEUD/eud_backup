@@ -18,6 +18,8 @@ func main() {
 		log.Fatal("Error loading environment variables")
 	}
 
+	backup.Start()
+
 	c := cron.New()
 
 	c.AddFunc("@every 0h1m0s", backup.Start)
