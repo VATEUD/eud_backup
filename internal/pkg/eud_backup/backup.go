@@ -11,10 +11,10 @@ import (
 // Represents the dump directory
 var dumpDir string = "dumps"
 
-func Backup(db *sql.DB, dbname string) {
+func Backup(db *sql.DB, dbname , folder string) {
 	var fileName = name(dbname)
 
-	dumper, err := mysqldump.Register(db, dumpDir, fileName)
+	dumper, err := mysqldump.Register(db, dumpDir + "/" + folder, fileName)
 
 	if err != nil {
 		log.Println(err)
@@ -34,6 +34,5 @@ func Backup(db *sql.DB, dbname string) {
 }
 
 func name(dbname string) string {
-	now := time.Now()
-	return fmt.Sprintf("%s_%d_%d_%d", dbname, now.Year(), now.Month(), now.Day())
+	return fmt.Sprintf("%s-%v", dbname, time.Now().UnixNano())
 }
