@@ -34,5 +34,6 @@ func Backup(db *sql.DB, dbname string) {
 }
 
 func name(dbname string) string {
-	return fmt.Sprintf("%s_%s", dbname, time.Now())
+	now := time.Now()
+	return fmt.Sprintf("%s_%d_%d_%d", dbname, now.Year(), now.Month(), now.Day())
 }

@@ -20,7 +20,7 @@ func main() {
 
 	c := cron.New()
 
-	c.AddFunc("@every 0h0m1s", backup.Start)
+	c.AddFunc("@every 0h1m0s", backup.Start)
 
 	c.Start()
 	sig := make(chan os.Signal)
