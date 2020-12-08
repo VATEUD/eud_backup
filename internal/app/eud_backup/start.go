@@ -15,7 +15,9 @@ func Start() {
 		"eud_site", "eud_central", "myvatsim", "central",
 	}
 
-	var folder = time.Now().UTC().Format("2020-12-12")
+	now := time.Now().UTC()
+
+	folder := fmt.Sprintf("%d-%02d-%02d", now.Year(), now.Month(), now.Day())
 
 	for _, name := range databases {
 		db, err := sql.Connect(name)
