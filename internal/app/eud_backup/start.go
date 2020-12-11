@@ -9,11 +9,7 @@ import (
 	"time"
 )
 
-func Start() {
-
-	databases := []string{
-		"eud_site", "eud_central", "myvatsim", "central",
-	}
+func Start(databases []string) {
 
 	now := time.Now().UTC()
 

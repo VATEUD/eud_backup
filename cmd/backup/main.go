@@ -3,8 +3,9 @@ package main
 import (
 	backup "eud_backup/internal/app/eud_backup"
 	"github.com/joho/godotenv"
-	"github.com/robfig/cron/v3"
+	"github.com/robfig/cron"
 	"log"
+	"flag"
 	"os"
 	"os/signal"
 )
@@ -18,11 +19,17 @@ func main() {
 		log.Fatal("Error loading environment variables")
 	}
 
-	backup.Start()
+	flag.Parse()
+
+	databases := flag.Args()
+
+	backup.Start(databases)
 
 	c := cron.New()
 
-	c.AddFunc("@midnight", backup.Start)
+	c.AddFunc("@midnight", func() {
+		backup.Start(databases)
+	})
 
 	c.Start()
 	sig := make(chan os.Signal)
