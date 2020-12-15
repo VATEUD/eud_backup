@@ -1,4 +1,4 @@
-package eud_backup
+package backup
 
 import (
 	"database/sql"

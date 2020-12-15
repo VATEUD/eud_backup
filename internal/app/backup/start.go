@@ -1,8 +1,8 @@
-package eud_backup
+package backup
 
 import (
-	backup "eud_backup/internal/pkg/eud_backup"
-	"eud_backup/internal/pkg/eud_backup/sql"
+	backup "eud_backup/internal/pkg/backup"
+	"eud_backup/internal/pkg/backup/sql"
 	"fmt"
 	"log"
 	"os"

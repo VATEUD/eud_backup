@@ -1,11 +1,11 @@
 package main
 
 import (
-	backup "eud_backup/internal/app/eud_backup"
+	backup "eud_backup/internal/app/backup"
+	"flag"
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron"
 	"log"
-	"flag"
 	"os"
 	"os/signal"
 )
