@@ -4,7 +4,10 @@ This repository contains a simple app which allows us to backup our databases da
 
 ## Setup
 <li>
-    Renam <copy>.env.example</code> to <code>.env</code> and change the environment variables.
+    Rename <copy>.env.example</code> to <code>.env</code> and change the environment variables.
+</li>
+<li>
+    Rename <copy>config.yaml.example</code> inside of <code>configs</code> folder to <code>config.yaml</code> and adapt the databases list to your needs.
 </li>
 <li>
     Start the app by running the following command - <code>go run cmd/backup/main.go</code>.
