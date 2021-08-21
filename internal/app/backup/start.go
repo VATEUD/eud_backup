@@ -13,6 +13,7 @@ const (
 	sleepPeriod = time.Hour * 24
 )
 
+// Start Function reads to config file and starts the loop which backs up the database
 func Start() {
 	config, err := backup.ReadConfigFile()
 
@@ -23,11 +24,14 @@ func Start() {
 
 	var databases []*database.Database
 
+	// add all databases to the databases slice
 	for _, name := range config.Databases {
 		databases = append(databases, database.New(name))
 	}
 
+	// start the loop
 	for {
+		// create a new temporary zip file
 		file, err := zipper.New()
 
 		if err != nil {
@@ -36,33 +40,37 @@ func Start() {
 			continue
 		}
 
+		// go through the databases slice and dump the databases
 		for _, db := range databases {
 			err = db.Dump()
 			if err != nil {
 				log.Println(err.Error())
-				time.Sleep(retryPeriod)
 				continue
 			}
 		}
 
+		// add the databases to the zip file
 		if errs := file.Zip(databases); errs != nil {
 			log.Printf("Failed to zip the files. Error:%s", err.Error())
 			time.Sleep(retryPeriod)
 			continue
 		}
 
+		// close (save) the zip file
 		if err = file.ZipFile.Close(); err != nil {
 			log.Println(err.Error())
 			time.Sleep(retryPeriod)
 			continue
 		}
 
+		// upload the zip file
 		if err = file.Upload(); err != nil {
 			log.Println(err.Error())
 			time.Sleep(retryPeriod)
 			continue
 		}
 
+		// sleep for 24 hours
 		time.Sleep(sleepPeriod)
 	}
 }

@@ -14,10 +14,12 @@ const (
 	singleDatabaseCredentials = "SINGLE_DATABASE_CREDENTIALS"
 )
 
+// isUsingSingleDatabaseCredentials checks if app should use single user for all databases
 func isUsingSingleDatabaseCredentials() bool {
 	return os.Getenv(singleDatabaseCredentials) == "true"
 }
 
+// RetrieveDatabaseCredentials retrieves credentials that are needed for authentication in order to execute mysqldump command
 func RetrieveDatabaseCredentials(database string) Config {
 	if isUsingSingleDatabaseCredentials() {
 		return Config{

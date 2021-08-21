@@ -4,6 +4,7 @@ import (
 	"crypto/cipher"
 )
 
+// DecryptData decrypts the given encrypted data
 func (cipherBlock CipherBlock) DecryptData(encryptedData []byte) ([]byte, error) {
 	gcm, err := cipher.NewGCM(cipherBlock.Block)
 	if err != nil {

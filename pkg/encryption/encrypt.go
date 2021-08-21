@@ -6,6 +6,7 @@ import (
 	"io"
 )
 
+// Encrypt encrypts the given bytes
 func (cipherBlock CipherBlock) Encrypt(file []byte) ([]byte, error) {
 	gcm, err := cipher.NewGCM(cipherBlock.Block)
 

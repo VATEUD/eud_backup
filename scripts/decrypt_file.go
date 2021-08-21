@@ -10,13 +10,16 @@ import (
 	"strings"
 )
 
+// main decrypts the binary file
 func main() {
 
+	// read the env file
 	if err := godotenv.Load("../.env"); err != nil {
 		log.Println(err.Error())
 		return
 	}
 
+	// check was binary provided
 	if len(os.Args) < 2 {
 		log.Fatalln("Please provide the file name.")
 		return
@@ -24,6 +27,7 @@ func main() {
 
 	fileName := os.Args[1]
 
+	// read the file
 	bytes, err := ioutil.ReadFile(fileName)
 
 	if err != nil {
@@ -31,6 +35,7 @@ func main() {
 		return
 	}
 
+	// create a new zip file
 	file, err := os.Create(getFileName(fileName))
 
 	if err != nil {
@@ -40,6 +45,7 @@ func main() {
 
 	defer file.Close()
 
+	// construct the new cipher
 	key, err := encryption.New()
 
 	if err != nil {
@@ -47,6 +53,7 @@ func main() {
 		return
 	}
 
+	// decrypt the binary file bytes
 	data, err := key.DecryptData(bytes)
 
 	if err != nil {
@@ -54,6 +61,7 @@ func main() {
 		return
 	}
 
+	// write the zip file
 	if _, err = file.Write(data); err != nil {
 		log.Fatalln(err.Error())
 		return
@@ -62,6 +70,7 @@ func main() {
 	log.Println("File saved!")
 }
 
+// getFileName returns the constructed zip file name
 func getFileName(name string) string {
 	return fmt.Sprintf("%s.zip", strings.Split(name, ".")[0])
 }

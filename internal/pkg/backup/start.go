@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 )
 
+// ReadConfigFile reads the config file and parses it to the Config struct which holds all the databases list
 func ReadConfigFile() (Config, error) {
 	bytes, err := ioutil.ReadFile("configs/config.yaml")
 
