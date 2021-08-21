@@ -3,35 +3,45 @@ package zipper
 import (
 	"archive/zip"
 	"eud_backup/pkg/database"
+	"eud_backup/pkg/minio"
 	"fmt"
 	"os"
 	"time"
 )
 
 type Archive struct {
-	File *os.File
-	Writer *zip.Writer
+	ZipFile *os.File
 }
 
-func (archive Archive) Zip(database *database.Database) error {
-	file, err := archive.Writer.Create(fmt.Sprintf("%s.sql", database.Name))
+func (archive *Archive) Upload() error {
+	session, err := minio.New()
 
 	if err != nil {
 		return err
 	}
 
-	if _, err := file.Write(database.DumpedBytes); err != nil {
+	file, err := os.Open(archive.ZipFile.Name())
+
+	defer file.Close()
+
+	if err != nil {
+		return err
+	}
+
+	if err = session.Upload(file); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (archive Archive) ZipSlice(databases []*database.Database) []error {
+func (archive *Archive) Zip(databases []*database.Database) []error {
 	var errors []error
+	writer := zip.NewWriter(archive.ZipFile)
+	defer writer.Close()
 
 	for _, db := range databases {
-		file, err := archive.Writer.Create(fmt.Sprintf("%s.sql", db.Name))
+		file, err := writer.Create(db.FileName())
 
 		if err != nil {
 			errors = append(errors, err)
@@ -46,12 +56,12 @@ func (archive Archive) ZipSlice(databases []*database.Database) []error {
 	return errors
 }
 
-func New() (Archive, error) {
-	file, err := os.Create(fmt.Sprintf("database_backup_%s.zip", time.Now().Format("2006-01-02")))
+func New() (*Archive, error) {
+	file, err := os.Create(fmt.Sprintf("database_backup_%s.zip", time.Now().UTC().Format("2006_01_02")))
 
 	if err != nil {
-		return Archive{}, nil
+		return nil, err
 	}
 
-	return Archive{file, zip.NewWriter(file)}, nil
+	return &Archive{file}, nil
 }

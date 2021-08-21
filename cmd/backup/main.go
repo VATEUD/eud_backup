@@ -3,6 +3,8 @@ package main
 import (
 	eudBackup "eud_backup/internal/app/backup"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
+	"log"
 	"os"
 	"os/signal"
 	"time"
@@ -12,11 +14,18 @@ type DatabasesResults map[string]string
 
 type Data struct {
 	DatabasesData DatabasesResults
-	CreatedAt time.Time
+	CreatedAt     time.Time
 }
 
 // Function starts the app
 func main() {
+
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalln(err.Error())
+		return
+	}
 
 	eudBackup.Start()
 

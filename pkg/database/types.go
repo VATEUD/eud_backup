@@ -1,15 +1,16 @@
 package database
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os/exec"
 	"time"
 )
 
 type Database struct {
-	Name string
+	Name        string
 	DumpedBytes []byte
-	AddedAt time.Time
+	AddedAt     time.Time
 }
 
 func (database *Database) Dump() error {
@@ -36,3 +37,10 @@ func (database *Database) Dump() error {
 	return nil
 }
 
+func (database *Database) String() string {
+	return database.Name
+}
+
+func (database *Database) FileName() string {
+	return fmt.Sprintf("%s_%s.sql", database.Name, time.Now().UTC().Format("2006_01_02"))
+}

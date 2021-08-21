@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func Main() {
+func main() {
 	config, err := backup.ReadConfigFile()
 
 	if err != nil {
@@ -27,7 +27,7 @@ func Main() {
 			return
 		}
 
-		file, err := os.Create(fmt.Sprintf("%s.sql", db.Name))
+		file, err := os.CreateTemp("backups", fmt.Sprintf("%s.sql", db.Name))
 
 		if err != nil {
 			return

@@ -1,3 +1,4 @@
 .env
 .idea
 configs/config.yaml
+*.zip
