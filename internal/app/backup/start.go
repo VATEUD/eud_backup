@@ -1,51 +1,76 @@
-package backup
+package eudBackup
 
 import (
-	backup "eud_backup/internal/pkg/backup"
-	"eud_backup/internal/pkg/backup/sql"
-	"fmt"
+	"eud_backup/internal/pkg/backup"
+	"eud_backup/pkg/database"
+	"eud_backup/pkg/zipper"
 	"log"
-	"os"
 	"time"
 )
 
-func Start(databases []string) {
+const (
+	retryPeriod = time.Minute * 5
+	sleepPeriod = time.Hour * 24
+)
 
-	now := time.Now().UTC()
-
-	folder := fmt.Sprintf("%d-%02d-%02d", now.Year(), now.Month(), now.Day())
-
-	for _, name := range databases {
-		db, err := sql.Connect(name)
-
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		if _, err := os.Stat("dumps/" + folder); os.IsNotExist(err) {
-
-			err := createDirctory(fmt.Sprintf("dumps/%s", folder), 0775)
-
-			if err != nil {
-				log.Println(err)
-
-				continue
-			}
-
-		}
-
-		backup.Backup(db, name, folder)
-	}
-
-}
-
-func createDirctory(name string, perms os.FileMode) error {
-	err := os.Mkdir(name, perms)
+// Start Function reads to config file and starts the loop which backs up the database
+func Start() {
+	config, err := backup.ReadConfigFile()
 
 	if err != nil {
-		return err
+		log.Fatalln(err.Error())
+		return
 	}
 
-	return nil
+	var databases []*database.Database
+
+	// add all databases to the databases slice
+	for _, name := range config.Databases {
+		databases = append(databases, database.New(name))
+	}
+
+	// start the loop
+	for {
+		// create a new temporary zip file
+		file, err := zipper.New()
+
+		if err != nil {
+			log.Println(err.Error())
+			time.Sleep(retryPeriod)
+			continue
+		}
+
+		// go through the databases slice and dump the databases
+		for _, db := range databases {
+			err = db.Dump()
+			if err != nil {
+				log.Println(err.Error())
+				continue
+			}
+		}
+
+		// add the databases to the zip file
+		if errs := file.Zip(databases); errs != nil {
+			log.Printf("Failed to zip the files. Error:%s", err.Error())
+			time.Sleep(retryPeriod)
+			continue
+		}
+
+		// close (save) the zip file
+		if err = file.ZipFile.Close(); err != nil {
+			log.Println(err.Error())
+			time.Sleep(retryPeriod)
+			continue
+		}
+
+		// upload the zip file
+		if err = file.Upload(); err != nil {
+			log.Println(err.Error())
+			time.Sleep(retryPeriod)
+			continue
+		}
+
+		// sleep for 24 hours
+		time.Sleep(sleepPeriod)
+	}
 }
