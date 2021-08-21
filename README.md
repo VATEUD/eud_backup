@@ -4,8 +4,11 @@ This repository contains a simple app which allows us to backup our databases da
 
 ## Setup
 <li>
-    Add environment variables into <code>.env</code> file
+    Renam <copy>.env.example</code> to <code>.env</code> and change the environment variables.
 </li>
 <li>
-    Start backup by running <code>go run cmd/backup/main.go database1 database2</code> (change database1 database2 to actual database names (eg. website, central))
+    Start the app by running the following command - <code>go run cmd/backup/main.go</code>.
+</li>
+<li>
+    To decrypt the file, change directory to <code>scripts</code>. Run <code>go run decrypt_file.go FILE_PATH</code> (change FILE_PATH to the binary file eg. <code>go run decrypt_file.go ../database_backup.bin</code>).
 </li>
