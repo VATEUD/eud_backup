@@ -17,7 +17,7 @@ type Minio struct {
 
 func (minio *Minio) GetFileName(file *os.File) string {
 	name := strings.Split(file.Name(), "/")[2]
-	return fmt.Sprintf("%s.zip", strings.Split(name, ".")[0])
+	return fmt.Sprintf("%s.bin", strings.Split(name, ".")[0])
 }
 
 func (minio *Minio) Upload(file *os.File) error {

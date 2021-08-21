@@ -3,9 +3,12 @@ package zipper
 import (
 	"archive/zip"
 	"eud_backup/pkg/database"
+	"eud_backup/pkg/encryption"
 	"eud_backup/pkg/minio"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -20,11 +23,31 @@ func (archive *Archive) Upload() error {
 		return err
 	}
 
-	file, err := os.Open(fmt.Sprintf("%s", archive.ZipFile.Name()))
+	bytes, err := ioutil.ReadFile(archive.ZipFile.Name())
+
+	defer os.Remove(archive.ZipFile.Name())
+
+	key, err := encryption.New()
+
+	if err != nil {
+		return err
+	}
+
+	encrypted, err := key.Encrypt(bytes)
+
+	if err != nil {
+		return err
+	}
+
+	file, err := os.CreateTemp("", archive.ToBin())
+
+	if err != nil {
+		return err
+	}
 
 	defer os.Remove(file.Name())
 
-	if err != nil {
+	if _, err = file.Write(encrypted); err != nil {
 		return err
 	}
 
@@ -33,6 +56,11 @@ func (archive *Archive) Upload() error {
 	}
 
 	return nil
+}
+
+func (archive *Archive) ToBin() string {
+	name := strings.Split(archive.ZipFile.Name(), "/")[2]
+	return fmt.Sprintf("%s.bin", strings.Split(name, ".")[0])
 }
 
 func (archive *Archive) Zip(databases []*database.Database) []error {
