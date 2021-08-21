@@ -1,6 +1,6 @@
 # eud_backup
 
-This repository contains a simple app which allows us to backup our databases daily.
+An application that backs <a href="https://vateud.net">VATEUD</a> databases up daily.
 
 ## Setup
 <li>
