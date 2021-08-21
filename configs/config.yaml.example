@@ -1,0 +1,3 @@
+databases:
+  - "dashboard"
+  - "api"
