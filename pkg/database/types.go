@@ -1,6 +1,7 @@
 package database
 
 import (
+	"eud_backup/pkg/config"
 	"fmt"
 	"io/ioutil"
 	"os/exec"
@@ -13,8 +14,13 @@ type Database struct {
 	AddedAt     time.Time
 }
 
+func (database *Database) commandArguments() []string {
+	conf := config.RetrieveDatabaseCredentials(database.Name)
+	return []string{fmt.Sprintf("-u%s", conf.Database.Username), fmt.Sprintf("-p%s", conf.Database.Password), database.Name}
+}
+
 func (database *Database) Dump() error {
-	cmd := exec.Command("mysqldump", "-uroot", "-p1234", database.Name)
+	cmd := exec.Command("mysqldump", database.commandArguments()...)
 
 	stdout, err := cmd.StdoutPipe()
 
