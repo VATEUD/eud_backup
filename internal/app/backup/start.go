@@ -69,6 +69,8 @@ func Start() {
 			time.Sleep(retryPeriod)
 			continue
 		}
+		
+		log.Println("Backed up!")
 
 		// sleep for 24 hours
 		time.Sleep(sleepPeriod)
