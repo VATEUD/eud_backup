@@ -1,37 +1,25 @@
 package main
 
 import (
-	backup "eud_backup/internal/app/backup"
-	"flag"
-	"github.com/joho/godotenv"
-	"github.com/robfig/cron"
-	"log"
+	eudBackup "eud_backup/internal/app/backup"
+	_ "github.com/go-sql-driver/mysql"
 	"os"
 	"os/signal"
+	"time"
 )
+
+type DatabasesResults map[string]string
+
+type Data struct {
+	DatabasesData DatabasesResults
+	CreatedAt time.Time
+}
 
 // Function starts the app
 func main() {
 
-	err := godotenv.Load(".env")
+	eudBackup.Start()
 
-	if err != nil {
-		log.Fatal("Error loading environment variables")
-	}
-
-	flag.Parse()
-
-	databases := flag.Args()
-
-	backup.Start(databases)
-
-	c := cron.New()
-
-	c.AddFunc("@midnight", func() {
-		backup.Start(databases)
-	})
-
-	c.Start()
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt, os.Kill)
 	<-sig
