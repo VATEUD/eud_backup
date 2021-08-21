@@ -2,7 +2,6 @@ package main
 
 import (
 	eudBackup "eud_backup/internal/app/backup"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
