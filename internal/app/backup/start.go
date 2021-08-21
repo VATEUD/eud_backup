@@ -57,7 +57,7 @@ func Start() {
 			continue
 		}
 
-		if err := file.Upload(); err != nil {
+		if err = file.Upload(); err != nil {
 			log.Println(err.Error())
 			time.Sleep(retryPeriod)
 			continue

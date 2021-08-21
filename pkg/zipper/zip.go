@@ -51,6 +51,10 @@ func (archive *Archive) Upload() error {
 		return err
 	}
 
+	if err = file.Close(); err != nil {
+		return err
+	}
+
 	if err = session.Upload(file); err != nil {
 		return err
 	}

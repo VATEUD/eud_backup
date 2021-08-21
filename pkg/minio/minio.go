@@ -21,13 +21,21 @@ func (minio *Minio) GetFileName(file *os.File) string {
 }
 
 func (minio *Minio) Upload(file *os.File) error {
+	file, err := os.Open(file.Name())
+
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
 	input := &s3.PutObjectInput{
 		Body:   file,
 		Bucket: aws.String(os.Getenv("MINIO_BUCKET")),
 		Key:    aws.String(fmt.Sprintf("%s/%s", time.Now().UTC().Format("2006-01-02"), minio.GetFileName(file))),
 	}
 
-	_, err := minio.Session.PutObject(input)
+	_, err = minio.Session.PutObject(input)
 
 	return err
 }
