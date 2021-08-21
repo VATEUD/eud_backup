@@ -20,9 +20,9 @@ func (archive *Archive) Upload() error {
 		return err
 	}
 
-	file, err := os.Open(archive.ZipFile.Name())
+	file, err := os.Open(fmt.Sprintf("%s", archive.ZipFile.Name()))
 
-	defer file.Close()
+	defer os.Remove(file.Name())
 
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func (archive *Archive) Zip(databases []*database.Database) []error {
 }
 
 func New() (*Archive, error) {
-	file, err := os.Create(fmt.Sprintf("database_backup_%s.zip", time.Now().UTC().Format("2006_01_02")))
+	file, err := os.CreateTemp("", fmt.Sprintf("database_backup_%s.zip", time.Now().UTC().Format("2006_01_02")))
 
 	if err != nil {
 		return nil, err

@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -14,11 +15,16 @@ type Minio struct {
 	Session *s3.S3
 }
 
-func (minio Minio) Upload(file *os.File) error {
+func (minio *Minio) GetFileName(file *os.File) string {
+	name := strings.Split(file.Name(), "/")[2]
+	return fmt.Sprintf("%s.zip", strings.Split(name, ".")[0])
+}
+
+func (minio *Minio) Upload(file *os.File) error {
 	input := &s3.PutObjectInput{
 		Body:   file,
 		Bucket: aws.String(os.Getenv("MINIO_BUCKET")),
-		Key:    aws.String(fmt.Sprintf("%s/%s", time.Now().UTC().Format("2006-01-02"), file.Name())),
+		Key:    aws.String(fmt.Sprintf("%s/%s", time.Now().UTC().Format("2006-01-02"), minio.GetFileName(file))),
 	}
 
 	_, err := minio.Session.PutObject(input)
