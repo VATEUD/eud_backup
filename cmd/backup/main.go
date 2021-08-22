@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"syscall"
 )
 
 // Function starts the app
@@ -21,6 +22,6 @@ func main() {
 	eudbackup.Start()
 
 	sig := make(chan os.Signal)
-	signal.Notify(sig, os.Interrupt, os.Kill)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 	<-sig
 }
