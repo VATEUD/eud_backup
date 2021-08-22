@@ -50,5 +50,3 @@ func (server *Server) loadRoutes() {
 		},
 	}
 }
-
-

@@ -17,7 +17,7 @@ const (
 func New() *Server {
 	return &Server{
 		&http.Server{
-			Addr: retrieveHttpPort(),
+			Addr:         retrieveHttpPort(),
 			WriteTimeout: time.Second * 15,
 			ReadTimeout:  time.Second * 15,
 		},

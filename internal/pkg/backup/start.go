@@ -71,6 +71,16 @@ func Start() {
 			continue
 		}
 
+		stats := Stats{
+			BackupTime:     time.Now().UTC(),
+			NextBackupTime: time.Now().UTC().Add(sleepPeriod),
+			Success:        true,
+		}
+
+		if err = stats.store(); err != nil {
+			log.Println(err.Error())
+		}
+
 		log.Println("Backed up!")
 
 		// sleep for 24 hours
