@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"eud_backup/pkg/cache"
-	"time"
 )
 
 const (
@@ -19,9 +18,9 @@ type Config struct {
 
 // Stats represents the backup stats
 type Stats struct {
-	BackupTime     time.Time `json:"backup_time"`
-	NextBackupTime time.Time `json:"next_backup_time"`
-	Success        bool      `json:"success"`
+	BackupTime     string `json:"backup_time"`
+	NextBackupTime string `json:"next_backup_time"`
+	Success        bool   `json:"success"`
 }
 
 func (stats Stats) store() error {

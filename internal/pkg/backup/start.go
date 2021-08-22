@@ -10,6 +10,7 @@ import (
 const (
 	retryPeriod = time.Minute * 5
 	sleepPeriod = time.Hour * 24
+	timeFormat  = "2006-01-02T15:04:05Z"
 )
 
 // Start starts the databse backup
@@ -73,8 +74,8 @@ func Start() {
 		}
 
 		stats := Stats{
-			BackupTime:     time.Now().UTC(),
-			NextBackupTime: time.Now().UTC().Add(sleepPeriod),
+			BackupTime:     time.Now().UTC().Format(timeFormat),
+			NextBackupTime: time.Now().UTC().Add(sleepPeriod).Format(timeFormat),
 			Success:        true,
 		}
 
