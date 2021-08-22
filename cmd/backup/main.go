@@ -1,7 +1,7 @@
 package main
 
 import (
-	eudBackup "eud_backup/internal/app/backup"
+	"eud_backup/internal/app/backup"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -18,7 +18,7 @@ func main() {
 		return
 	}
 
-	eudBackup.Start()
+	eudbackup.Start()
 
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt, os.Kill)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"eud_backup/pkg/cache"
+	"log"
 	"net/http"
 )
 
@@ -23,15 +24,21 @@ func Stats(w http.ResponseWriter, r *http.Request) {
 		resp, err := notFound()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("error occurred"))
+			if _, err = w.Write([]byte("error occurred")); err != nil {
+				log.Println(err.Error())
+			}
 			return
 		}
 
-		w.Write(resp)
+		if _, err = w.Write(resp); err != nil {
+			log.Println(err.Error())
+		}
 		return
 	}
 
-	w.Write([]byte(data))
+	if _, err = w.Write([]byte(data)); err != nil {
+		log.Println(err.Error())
+	}
 }
 
 // notFound marshals the 404 response

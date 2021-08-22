@@ -29,6 +29,10 @@ func (archive *Archive) Upload() error {
 	// read the zip file
 	bytes, err := ioutil.ReadFile(archive.ZipFile.Name())
 
+	if err != nil {
+		return err
+	}
+
 	// defer the file removal (until end of the function)
 	defer os.Remove(archive.ZipFile.Name())
 

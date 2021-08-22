@@ -1,4 +1,4 @@
-package eudBackup
+package eudbackup
 
 import (
 	"eud_backup/internal/pkg/backup"
