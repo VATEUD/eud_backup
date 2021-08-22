@@ -26,8 +26,7 @@ func New() *Server {
 	}
 }
 
-// retrieveHttpPort retrieves the server port from the environment file.
-//If one isn't provided, it'll use the default one.
+// retrieveHttpPort retrieves the server port from the environment file. If one isn't provided, it'll use the default one.
 func retrieveHttpPort() string {
 	if port := os.Getenv(defaultPortFieldName); port != "" {
 		return fmt.Sprintf(":%s", port)

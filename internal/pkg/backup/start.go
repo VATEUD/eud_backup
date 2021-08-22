@@ -12,6 +12,7 @@ const (
 	sleepPeriod = time.Hour * 24
 )
 
+// Start starts the databse backup
 func Start() {
 	for {
 		log.Println("Starting backup.")
