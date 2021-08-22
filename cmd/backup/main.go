@@ -23,5 +23,6 @@ func main() {
 
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
-	_ = <-sig
+	s := <-sig
+	log.Println("Terminating due to received signal. Signal - ", s)
 }
