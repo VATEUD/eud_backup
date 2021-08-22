@@ -15,22 +15,26 @@ const (
 
 // Start Function reads to config file and starts the loop which backs up the database
 func Start() {
-	config, err := backup.ReadConfigFile()
-
-	if err != nil {
-		log.Fatalln(err.Error())
-		return
-	}
-
-	var databases []*database.Database
-
-	// add all databases to the databases slice
-	for _, name := range config.Databases {
-		databases = append(databases, database.New(name))
-	}
-
 	// start the loop
 	for {
+		log.Println("Starting backup.")
+
+		// read the config file
+		config, err := backup.ReadConfigFile()
+
+		if err != nil {
+			log.Println(err.Error())
+			time.Sleep(retryPeriod)
+			continue
+		}
+
+		var databases []*database.Database
+
+		// add all databases to the databases slice
+		for _, name := range config.Databases {
+			databases = append(databases, database.New(name))
+		}
+
 		// create a new temporary zip file
 		file, err := zipper.New()
 
