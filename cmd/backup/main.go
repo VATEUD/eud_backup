@@ -23,5 +23,5 @@ func main() {
 
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
-	<-sig
+	_ = <-sig
 }
