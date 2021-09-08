@@ -2,6 +2,7 @@ package zipper
 
 import (
 	"archive/zip"
+	backblaze2 "eud_backup/pkg/backblaze"
 	"eud_backup/pkg/database"
 	"eud_backup/pkg/encryption"
 	"eud_backup/pkg/minio"
@@ -21,6 +22,12 @@ type Archive struct {
 func (archive *Archive) Upload() error {
 	// start the session
 	session, err := minio.New()
+
+	if err != nil {
+		return err
+	}
+
+	backblaze, err := backblaze2.New()
 
 	if err != nil {
 		return err
@@ -72,6 +79,10 @@ func (archive *Archive) Upload() error {
 
 	// upload the binary file
 	if err = session.Upload(file); err != nil {
+		return err
+	}
+
+	if err = backblaze.Upload(file); err != nil {
 		return err
 	}
 
